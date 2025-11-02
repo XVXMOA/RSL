@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import DarkModeToggle from './DarkModeToggle.jsx';
 
 const navItems = [
   { path: '/', label: 'Dashboard' },
@@ -17,32 +18,43 @@ const linkClasses = ({ isActive }) =>
 
 export default function Navbar() {
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-slate-200 bg-slate-50/80 backdrop-blur-md transition-colors dark:border-slate-800 dark:bg-slate-900/80">
-      <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-3 md:flex-row md:items-center md:justify-between">
+    <header className="sticky top-0 z-40 w-full border-b border-slate-200 bg-slate-50/80 backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/80">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
         <div className="flex items-center gap-3">
-          <img
-            src="/rsl-logo.svg"
-            alt="Raid Planner logo"
-            className="h-10 w-10 rounded-xl border border-slate-200 bg-white object-cover p-1 shadow-sm dark:border-slate-700 dark:bg-slate-900"
-          />
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-white shadow-lg shadow-primary/30">
+            <span className="text-lg font-bold">RSL</span>
+          </div>
           <div>
-            <h1 className="text-xl font-semibold text-slate-900 dark:text-slate-100">Raid Planner</h1>
-            <p className="text-xs text-slate-500 dark:text-slate-400">Plan. Track. Dominate Teleria.</p>
+            <p className="text-lg font-semibold">Raid Companion</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Plan. Track. Dominate Teleria.
+            </p>
           </div>
         </div>
-        <div className="flex flex-1 flex-wrap items-center justify-between gap-2 md:flex-none md:justify-end">
-          <nav className="flex flex-wrap items-center gap-2">
-            {navItems.map((item) => (
-              <NavLink key={item.path} to={item.path} className={linkClasses} end>
-                {item.label}
-              </NavLink>
-            ))}
-          </nav>
-          <span className="hidden text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400 md:inline-flex">
-            System Dark Mode
-          </span>
+        <nav className="hidden items-center gap-2 md:flex">
+          {navItems.map((item) => (
+            <NavLink key={item.path} to={item.path} className={linkClasses} end>
+              {item.label}
+            </NavLink>
+          ))}
+        </nav>
+        <div className="flex items-center gap-3">
+          <DarkModeToggle />
+          <button
+            type="button"
+            className="inline-flex rounded-full border border-primary/40 px-3 py-2 text-xs font-semibold text-primary transition hover:border-primary hover:bg-primary hover:text-white"
+          >
+            Save Snapshot
+          </button>
         </div>
       </div>
+      <nav className="flex flex-wrap gap-2 border-t border-slate-200 px-4 py-2 md:hidden dark:border-slate-800">
+        {navItems.map((item) => (
+          <NavLink key={item.path} to={item.path} className={linkClasses} end>
+            {item.label}
+          </NavLink>
+        ))}
+      </nav>
     </header>
   );
 }

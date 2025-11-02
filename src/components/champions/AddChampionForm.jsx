@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import ChampionSearchInput from './ChampionSearchInput.jsx';
-import StarSelector from './StarSelector.jsx';
 
 export default function AddChampionForm({
   onAdd,
@@ -9,21 +8,11 @@ export default function AddChampionForm({
 }) {
   const [selectedChampion, setSelectedChampion] = useState(null);
   const [level, setLevel] = useState(1);
-  const [ascensionLevel, setAscensionLevel] = useState(0);
-  const [soulLevel, setSoulLevel] = useState(0);
   const [feedback, setFeedback] = useState(null);
 
   const resetForm = () => {
     setSelectedChampion(null);
     setLevel(1);
-    setAscensionLevel(0);
-    setSoulLevel(0);
-  };
-
-  const sanitizeStarValue = (value) => {
-    const numeric = Number(value);
-    if (Number.isNaN(numeric)) return 0;
-    return Math.min(6, Math.max(0, Math.round(numeric)));
   };
 
   const handleSubmit = async (event) => {
@@ -46,9 +35,7 @@ export default function AddChampionForm({
 
     const result = await onAdd({
       champion: selectedChampion,
-      level: Math.round(numericLevel),
-      ascensionLevel: sanitizeStarValue(ascensionLevel),
-      soulLevel: sanitizeStarValue(soulLevel)
+      level: Math.round(numericLevel)
     });
 
     if (result?.success) {
@@ -107,36 +94,17 @@ export default function AddChampionForm({
               </div>
             </div>
           </div>
-          <div className="grid gap-4 sm:grid-cols-3">
-            <div>
-              <label className="text-sm font-semibold text-slate-600 dark:text-slate-300">
-                Level
-              </label>
-              <input
-                type="number"
-                min="1"
-                max="60"
-                value={level}
-                onChange={(event) => setLevel(event.target.value)}
-                disabled={isSubmitting}
-                className="mt-1 h-11 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-              />
-            </div>
-            <StarSelector
-              label="Ascension"
-              value={ascensionLevel}
-              onChange={setAscensionLevel}
-              helperText="Tap to set 0-6 ascension stars"
-              className="sm:col-span-1"
-              disabled={isSubmitting}
-            />
-            <StarSelector
-              label="Soul Level"
-              value={soulLevel}
-              onChange={setSoulLevel}
-              helperText="Tap to set 0-6 awakening stars"
-              className="sm:col-span-1"
-              disabled={isSubmitting}
+          <div>
+            <label className="text-sm font-semibold text-slate-600 dark:text-slate-300">
+              Level
+            </label>
+            <input
+              type="number"
+              min="1"
+              max="60"
+              value={level}
+              onChange={(event) => setLevel(event.target.value)}
+              className="mt-1 h-11 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
             />
           </div>
         </div>
