@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useRSLStore } from './store/useRSLStore.js';
 import Navbar from './components/layout/Navbar.jsx';
 import DashboardPage from './pages/Dashboard.jsx';
 import ChampionsPage from './pages/Champions.jsx';
@@ -24,33 +25,12 @@ const PageWrapper = ({ children }) => (
 
 export default function App() {
   const location = useLocation();
+  const darkMode = useRSLStore((state) => state.settings.darkMode);
 
   useEffect(() => {
     const root = window.document.documentElement;
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-
-    const applyScheme = (isDark) => {
-      if (isDark) {
-        root.classList.add('dark');
-      } else {
-        root.classList.remove('dark');
-      }
-    };
-
-    applyScheme(mediaQuery.matches);
-
-    const handler = (event) => {
-      applyScheme(event.matches);
-    };
-
-    if (mediaQuery.addEventListener) {
-      mediaQuery.addEventListener('change', handler);
-      return () => mediaQuery.removeEventListener('change', handler);
-    }
-
-    mediaQuery.addListener(handler);
-    return () => mediaQuery.removeListener(handler);
-  }, []);
+    root.classList.toggle('dark', darkMode);
+  }, [darkMode]);
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-100 text-slate-900 transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100">
