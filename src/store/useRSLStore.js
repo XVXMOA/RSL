@@ -11,25 +11,31 @@ const sampleChampions = [
     id: 'champ-1',
     name: 'Arbiter',
     faction: 'High Elves',
-    type: 'Support',
     rarity: 'Legendary',
-    level: 60
+    level: 60,
+    rank: 6,
+    gearSet: 'Speed',
+    notes: 'Arena speed lead. Focus on high speed and accuracy.'
   },
   {
     id: 'champ-2',
     name: 'Kael',
     faction: 'Dark Elves',
-    type: 'Attack',
     rarity: 'Rare',
-    level: 60
+    level: 60,
+    rank: 6,
+    gearSet: 'Lifesteal',
+    notes: 'Starter campaign farmer. Build crit rate and crit damage.'
   },
   {
     id: 'champ-3',
     name: 'Bad-el-Kazar',
     faction: 'Undead Hordes',
-    type: 'Support',
     rarity: 'Legendary',
-    level: 60
+    level: 60,
+    rank: 6,
+    gearSet: 'Stalwart',
+    notes: 'Clan boss poison support. Stack defense and HP.'
   }
 ];
 
@@ -104,7 +110,7 @@ const sampleMilestones = [
 
 const sampleStats = {
   totalChampions: sampleChampions.length,
-  totalSixStar: sampleChampions.filter((champ) => champ.level === 60).length
+  totalSixStar: sampleChampions.filter((champ) => champ.rank === 6).length
 };
 
 export const useRSLStore = create(
@@ -119,6 +125,20 @@ export const useRSLStore = create(
       settings: {
         darkMode: false
       },
+      addChampion: (champion) =>
+        set((state) => ({
+          champions: [...state.champions, { id: nanoid(), ...champion }]
+        })),
+      updateChampion: (id, updates) =>
+        set((state) => ({
+          champions: state.champions.map((champ) =>
+            champ.id === id ? { ...champ, ...updates } : champ
+          )
+        })),
+      deleteChampion: (id) =>
+        set((state) => ({
+          champions: state.champions.filter((champ) => champ.id !== id)
+        })),
       updateStats: (updates) =>
         set((state) => ({
           stats: { ...state.stats, ...updates }
@@ -177,6 +197,10 @@ export const useRSLStore = create(
       deleteMilestone: (id) =>
         set((state) => ({
           milestones: state.milestones.filter((milestone) => milestone.id !== id)
+        })),
+      toggleDarkMode: () =>
+        set((state) => ({
+          settings: { ...state.settings, darkMode: !state.settings.darkMode }
         })),
       resetAll: () =>
         set({

@@ -1,4 +1,6 @@
 import { NavLink } from 'react-router-dom';
+import DarkModeToggle from './DarkModeToggle.jsx';
+
 const navItems = [
   { path: '/', label: 'Dashboard' },
   { path: '/champions', label: 'Champions' },
@@ -36,8 +38,14 @@ export default function Navbar() {
             </NavLink>
           ))}
         </nav>
-        <div className="hidden items-center gap-3 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400 md:flex">
-          System Dark Mode
+        <div className="flex items-center gap-3">
+          <DarkModeToggle />
+          <button
+            type="button"
+            className="inline-flex rounded-full border border-primary/40 px-3 py-2 text-xs font-semibold text-primary transition hover:border-primary hover:bg-primary hover:text-white"
+          >
+            Save Snapshot
+          </button>
         </div>
       </div>
       <nav className="flex flex-wrap gap-2 border-t border-slate-200 px-4 py-2 md:hidden dark:border-slate-800">
