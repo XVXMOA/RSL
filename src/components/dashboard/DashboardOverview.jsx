@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useRSLStore } from '../../store/useRSLStore.js';
 
@@ -12,7 +12,7 @@ export default function DashboardOverview() {
   const stats = useRSLStore((state) => state.stats);
   const updateStats = useRSLStore((state) => state.updateStats);
   const resources = useRSLStore((state) => state.resources);
-  const updateResources = useRSLStore((state) => state.updateResources);
+  const gear = useRSLStore((state) => state.gear);
 
   const [editingKey, setEditingKey] = useState(null);
   const [tempValue, setTempValue] = useState('');
@@ -31,17 +31,6 @@ export default function DashboardOverview() {
     setEditingKey(null);
   };
 
-  const resourceEntries = useMemo(() => Object.entries(resources), [resources]);
-
-  const handleResourceChange = (key) => (event) => {
-    const numericValue = Number(event.target.value);
-    if (Number.isNaN(numericValue) || numericValue < 0) {
-      updateResources({ [key]: 0 });
-      return;
-    }
-    updateResources({ [key]: Math.round(numericValue) });
-  };
-
   return (
     <section className="grid gap-6 lg:grid-cols-3">
       <motion.div
@@ -50,7 +39,7 @@ export default function DashboardOverview() {
       >
         <header className="flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-semibold">Account Overview</h2>
+            <h2 className="text-xl font-semibold">Account Snapshot</h2>
             <p className="text-sm text-slate-500 dark:text-slate-400">
               Update your high-level stats to keep the dashboard accurate.
             </p>
@@ -100,24 +89,24 @@ export default function DashboardOverview() {
         layout
         className="space-y-4 rounded-2xl border border-slate-200 bg-white/70 p-6 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/60"
       >
-        <h3 className="text-lg font-semibold">Resource Ledger</h3>
-        <p className="text-sm text-slate-500 dark:text-slate-400">
-          Fine-tune your consumables so the dashboard stays accurate between sessions.
-        </p>
-        <div className="grid gap-3 sm:grid-cols-2">
-          {resourceEntries.map(([key, value]) => (
-            <label key={key} className="space-y-1 text-sm font-medium text-slate-600 dark:text-slate-300">
-              <span className="block capitalize">{key.replace(/([A-Z])/g, ' $1')}</span>
-              <input
-                type="number"
-                min="0"
-                value={value}
-                onChange={handleResourceChange(key)}
-                className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-right text-base font-semibold text-slate-900 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-              />
-            </label>
+        <h3 className="text-lg font-semibold">Quick Resources</h3>
+        <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-300">
+          {Object.entries(resources).map(([key, value]) => (
+            <li key={key} className="flex items-center justify-between">
+              <span className="capitalize">{key.replace(/([A-Z])/g, ' $1')}</span>
+              <span className="font-semibold">{value.toLocaleString()}</span>
+            </li>
           ))}
-        </div>
+        </ul>
+        <h3 className="pt-4 text-lg font-semibold">Featured Gear</h3>
+        <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-300">
+          {Object.entries(gear).map(([key, value]) => (
+            <li key={key} className="flex items-center justify-between">
+              <span className="capitalize">{key.replace(/([A-Z])/g, ' $1')}</span>
+              <span className="font-semibold">{value}</span>
+            </li>
+          ))}
+        </ul>
       </motion.div>
     </section>
   );

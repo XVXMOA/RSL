@@ -11,27 +11,41 @@ const sampleChampions = [
     id: 'champ-1',
     name: 'Arbiter',
     faction: 'High Elves',
-    type: 'Support',
     rarity: 'Legendary',
-    level: 60
+    level: 60,
+    rank: 6,
+    gearSet: 'Speed',
+    notes: 'Arena speed lead. Focus on high speed and accuracy.'
   },
   {
     id: 'champ-2',
     name: 'Kael',
     faction: 'Dark Elves',
-    type: 'Attack',
     rarity: 'Rare',
-    level: 60
+    level: 60,
+    rank: 6,
+    gearSet: 'Lifesteal',
+    notes: 'Starter campaign farmer. Build crit rate and crit damage.'
   },
   {
     id: 'champ-3',
     name: 'Bad-el-Kazar',
     faction: 'Undead Hordes',
-    type: 'Support',
     rarity: 'Legendary',
-    level: 60
+    level: 60,
+    rank: 6,
+    gearSet: 'Stalwart',
+    notes: 'Clan boss poison support. Stack defense and HP.'
   }
 ];
+
+const sampleGear = {
+  speedBoots: 8,
+  perceptionSets: 4,
+  lifestealSets: 3,
+  savageSets: 2,
+  resistanceAccessories: 6
+};
 
 const sampleResources = {
   energy: 325,
@@ -47,15 +61,15 @@ const sampleTasks = [
   {
     id: 'task-1',
     title: 'Farm Dragon 20',
-    description: 'Target: 100 runs for ascension potions.',
+    description: 'Target: 100 runs for artifacts.',
     priority: 'High',
     dueDate: '2024-06-01',
     status: 'todo'
   },
   {
     id: 'task-2',
-    title: 'Tune Clan Boss team',
-    description: 'Lock in a consistent 2-key NM setup.',
+    title: 'Upgrade Kael gear',
+    description: 'Take gloves and chest to +16.',
     priority: 'Medium',
     dueDate: '2024-05-25',
     status: 'in-progress'
@@ -87,8 +101,8 @@ const sampleMilestones = [
   },
   {
     id: 'goal-3',
-    name: 'Doom Tower Progression',
-    description: 'Clear Hard Rotation for secret rooms and forge materials.',
+    name: 'Gear Upgrade Project',
+    description: 'Upgrade 20 artifact pieces to +16.',
     targetDate: '2024-07-15',
     progress: 75
   }
@@ -96,7 +110,7 @@ const sampleMilestones = [
 
 const sampleStats = {
   totalChampions: sampleChampions.length,
-  totalSixStar: sampleChampions.filter((champ) => champ.level === 60).length
+  totalSixStar: sampleChampions.filter((champ) => champ.rank === 6).length
 };
 
 export const useRSLStore = create(
@@ -104,15 +118,34 @@ export const useRSLStore = create(
     (set, get) => ({
       stats: sampleStats,
       champions: sampleChampions,
+      gear: sampleGear,
       resources: sampleResources,
       tasks: sampleTasks,
       milestones: sampleMilestones,
       settings: {
         darkMode: false
       },
+      addChampion: (champion) =>
+        set((state) => ({
+          champions: [...state.champions, { id: nanoid(), ...champion }]
+        })),
+      updateChampion: (id, updates) =>
+        set((state) => ({
+          champions: state.champions.map((champ) =>
+            champ.id === id ? { ...champ, ...updates } : champ
+          )
+        })),
+      deleteChampion: (id) =>
+        set((state) => ({
+          champions: state.champions.filter((champ) => champ.id !== id)
+        })),
       updateStats: (updates) =>
         set((state) => ({
           stats: { ...state.stats, ...updates }
+        })),
+      updateGear: (updates) =>
+        set((state) => ({
+          gear: { ...state.gear, ...updates }
         })),
       updateResources: (updates) =>
         set((state) => ({
@@ -165,10 +198,15 @@ export const useRSLStore = create(
         set((state) => ({
           milestones: state.milestones.filter((milestone) => milestone.id !== id)
         })),
+      toggleDarkMode: () =>
+        set((state) => ({
+          settings: { ...state.settings, darkMode: !state.settings.darkMode }
+        })),
       resetAll: () =>
         set({
           stats: sampleStats,
           champions: sampleChampions,
+          gear: sampleGear,
           resources: sampleResources,
           tasks: sampleTasks,
           milestones: sampleMilestones,

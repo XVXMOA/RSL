@@ -27,7 +27,7 @@ export default function SettingsPage() {
   const handleImport = () => {
     try {
       const parsed = JSON.parse(importValue);
-      const allowedKeys = ['stats', 'champions', 'resources', 'tasks', 'milestones', 'settings'];
+      const allowedKeys = ['stats', 'champions', 'gear', 'resources', 'tasks', 'milestones', 'settings'];
       const payload = {};
       allowedKeys.forEach((key) => {
         if (parsed[key]) {
